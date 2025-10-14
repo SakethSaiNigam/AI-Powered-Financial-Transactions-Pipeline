@@ -116,6 +116,7 @@ cp .env.example .env
 docker compose up --build
 ```
 API available at: http://localhost:8000/docs
+
 Database: localhost:5432 (user: postgres / pass: postgres)
 
 ### 🔎 Core Endpoints
@@ -127,14 +128,16 @@ Method	Endpoint	Description
 - POST	/recompute	Recalculate anomaly scores
 
 ### 🧰 Environment Variables
-Variable	Description	Default
-APP_ENV	Environment (dev/prod)	dev
-DATABASE_URL	SQLAlchemy DB URI	postgresql://postgres:postgres@db:5432/transactions
-ANOMALY_Z_THRESHOLD	Min score to flag anomalies	3.0
-ANOMALY_AMOUNT_THRESHOLD	Rule-based high amount	10000
-OPENAI_API_KEY	Your OpenAI key	empty
-OPENAI_MODEL	Model for reasoning	gpt-4o-mini
-ENABLE_LLM_ANALYSIS	Enable LLM risk reasoning	false
+| Variable | Description | Default |
+|-----------|--------------|----------|
+| `APP_ENV` | Environment (dev/prod) | `dev` |
+| `DATABASE_URL` | SQLAlchemy DB URI | `postgresql://postgres:postgres@db:5432/transactions` |
+| `ANOMALY_Z_THRESHOLD` | Min score to flag anomalies | `3.0` |
+| `ANOMALY_AMOUNT_THRESHOLD` | Rule-based high amount | `10000` |
+| `OPENAI_API_KEY` | Your OpenAI key | *(empty)* |
+| `OPENAI_MODEL` | Model for reasoning | `gpt-4o-mini` |
+| `ENABLE_LLM_ANALYSIS` | Enable LLM risk reasoning | `false` |
+
 
 ### 💡 AI / LLM Integration
 If **ENABLE_LLM_ANALYSIS=true** and **OPENAI_API_KEY** is provided, the service will automatically:
@@ -160,7 +163,7 @@ docker build -t your-username/ai-fin-transactions-pipeline .
 docker push your-username/ai-fin-transactions-pipeline
 ```
 ### ✨ Author
-Saketh Sai Nigam Kanduri
-📧 kndrsakethms@gmail.com
-🔗 LinkedIn
-🎓 University College Dublin — M.Sc. Data & Computational Science
+**Saketh Sai Nigam Kanduri**
+- 📧 kndrsakethms@gmail.com
+- 🔗 LinkedIn
+- 🎓 University College Dublin — M.Sc. Data & Computational Science
