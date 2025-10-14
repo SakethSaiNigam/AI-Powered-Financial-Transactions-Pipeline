@@ -1,170 +1,116 @@
-# AI-Powered-Financial-Transactions-Pipeline
+# AI-Powered Financial Transactions Pipeline
 
-# 💸 AI-Powered Financial Transactions Pipeline  
-> Scalable backend service with real-time anomaly detection and LLM-driven insights
+A production-ready FastAPI service that ingests financial transactions at scale, flags anomalies,
+and generates LLM-powered insights. Designed to process 1M+ transactions/day with async I/O,
+SQLAlchemy 2.0, and optional background batching.
 
-![FastAPI](https://img.shields.io/badge/FastAPI-0.115.0-009688?logo=fastapi)
-![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
-![Docker](https://img.shields.io/badge/Docker-ready-0db7ed?logo=docker)
+## Features
+- **FastAPI** REST service (`/ingest`, `/transactions`, `/anomalies`, `/insights`)
+- **PostgreSQL + SQLAlchemy 2.0** for durable storage
+- **Anomaly detection**: statistical z-score + rules; optional **LLM risk reasoning** using OpenAI via LangChain
+- **Async batching** for throughput; idempotent ingestion
+- **Dockerized** with `docker-compose` (API + Postgres)
+- **Config via env** with `.env` file
+- **Tests** with pytest + httpx
 
----
-
-## 📘 Overview
-This project is a **production-ready FastAPI service** that ingests, stores, and analyzes financial transactions at scale.  
-It combines **statistical anomaly detection** with **AI-powered reasoning (OpenAI + LangChain)** to identify suspicious transactions and provide concise natural-language explanations.
-
-The system is designed to handle **1M+ transactions per day** using asynchronous I/O and modern Python tooling.
-
----
-
-## 🚀 Key Features
-
-✅ **FastAPI REST API** — CRUD and analytics endpoints  
-✅ **Scalable architecture** — PostgreSQL + SQLAlchemy 2.0  
-✅ **Anomaly Detection** — z-score and rule-based hybrid  
-✅ **LLM Integration (optional)** — OpenAI via LangChain for intelligent insights  
-✅ **Dockerized Deployment** — ready for local or cloud (Azure / AWS / GCP)  
-✅ **Real-time monitoring** — structured logs and API health checks  
-✅ **Unit Tests** — pytest + httpx for async endpoint validation  
+> **Note:** LLM analysis is optional and disabled if no `OPENAI_API_KEY` is provided.
 
 ---
 
-## 🏗️ Architecture
-
-```text
-+-------------+     +--------------------+     +---------------------+
-| Client / UI | ---> | FastAPI Service   | ---> | PostgreSQL Database |
-+-------------+       | • /ingest         |       | • transactions      |
-| • /anomalies |      +-------------------+       +---------------------+
-| • /insights (LLM) |
-+--------------------+
-          |
-          v
-+--------------------+
-| OpenAI (LLM)       |
-| LangChain Pipeline |
-+--------------------+
+## Architecture
 ```
----
-
-## ⚙️ Tech Stack
-
-| Layer | Technology |
-|-------|-------------|
-| API Framework | FastAPI |
-| Database | PostgreSQL + SQLAlchemy 2.0 |
-| Deployment | Docker & Docker Compose |
-| ML/AI Layer | NumPy, OpenAI API, LangChain |
-| DevOps | Uvicorn, pytest, dotenv |
-| Language | Python 3.11 |
-
----
-
-## 📂 Project Structure
-
-```text
-ai-fin-transactions-pipeline/
-│
-├── app/
-│   ├── main.py              # FastAPI entry point
-│   ├── config.py            # Environment & settings
-│   ├── database.py          # SQLAlchemy engine & session
-│   ├── models.py            # ORM models
-│   ├── schemas.py           # Pydantic models
-│   ├── routers/
-│   │   └── transactions.py  # API routes
-│   └── services/
-│       ├── anomaly.py       # z-score & rule-based detection
-│       └── insights.py      # LLM reasoning (OpenAI)
-│
-├── scripts/
-│   └── load_sample.py       # Generate & ingest test data
-│
-├── tests/
-│   └── test_api.py          # Basic API test
-│
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-├── .env.example
-└── README.md
+FastAPI --> /ingest --> DB (Postgres)
+        \-> /analyze (background) --> Stats + (optional) LLM --> anomaly_score, reason
 ```
----
 
-## 🧪 Quickstart (Local Setup)
+## Endpoints
+- `POST /ingest` — ingest one or many transactions
+- `GET /transactions` — list paginated transactions
+- `GET /anomalies` — list flagged transactions (score >= threshold)
+- `GET /insights/{transaction_id}` — return AI-generated rationale (if available)
+- `POST /recompute` — recompute anomaly scores for a time range or all
 
-### 1️⃣ Clone and setup
+## Quickstart (Local Python)
 ```bash
-git clone https://github.com/<your-username>/ai-fin-transactions-pipeline.git
-cd ai-fin-transactions-pipeline
-
 python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env
-```
----
 
-### 2️⃣ Run the API
-```bash
+# copy env template and edit values
+cp .env.example .env
+
+# start the API
 uvicorn app.main:app --reload
-```
-👉 Open http://127.0.0.1:8000/docs to explore the interactive Swagger UI.
 
-🐳 Quickstart (Docker)
+# Ingest sample data
+python scripts/load_sample.py
+```
+
+Open the docs at: http://127.0.0.1:8000/docs
+
+## Quickstart (Docker)
 ```bash
+# 1) copy env template
 cp .env.example .env
+
+# 2) launch
 docker compose up --build
+
+# API: http://localhost:8000/docs
+# DB: postgres:5432 (user: postgres, pass from env, db: transactions)
 ```
-API available at: http://localhost:8000/docs
 
-Database: localhost:5432 (user: postgres / pass: postgres)
+## Environment Variables (`.env`)
+```
+APP_ENV=dev
+DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/transactions
+ANOMALY_Z_THRESHOLD=3.0
+ANOMALY_AMOUNT_THRESHOLD=10000
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-4o-mini
+ENABLE_LLM_ANALYSIS=false
+BATCH_SIZE=1000
+```
 
-### 🔎 Core Endpoints
-Method	Endpoint	Description
-- POST	/ingest	Bulk ingest transactions
-- GET	/transactions	List transactions (filter/pagination)
-- GET	/anomalies	List high-risk anomalies
-- GET	/insights/{transaction_id}	Fetch AI-generated reasoning
-- POST	/recompute	Recalculate anomaly scores
+> For local without Docker, set `DATABASE_URL` like:
+> `postgresql+psycopg2://postgres:postgres@localhost:5432/transactions`
 
-### 🧰 Environment Variables
-| Variable | Description | Default |
-|-----------|--------------|----------|
-| `APP_ENV` | Environment (dev/prod) | `dev` |
-| `DATABASE_URL` | SQLAlchemy DB URI | `postgresql://postgres:postgres@db:5432/transactions` |
-| `ANOMALY_Z_THRESHOLD` | Min score to flag anomalies | `3.0` |
-| `ANOMALY_AMOUNT_THRESHOLD` | Rule-based high amount | `10000` |
-| `OPENAI_API_KEY` | Your OpenAI key | *(empty)* |
-| `OPENAI_MODEL` | Model for reasoning | `gpt-4o-mini` |
-| `ENABLE_LLM_ANALYSIS` | Enable LLM risk reasoning | `false` |
+## Project Structure
+```
+app/
+  main.py
+  config.py
+  database.py
+  models.py
+  schemas.py
+  routers/
+    transactions.py
+  services/
+    anomaly.py
+    insights.py
+scripts/
+  load_sample.py
+tests/
+  test_api.py
+```
 
-
-### 💡 AI / LLM Integration
-If **ENABLE_LLM_ANALYSIS=true** and **OPENAI_API_KEY** is provided, the service will automatically:
-- Analyze flagged anomalies using OpenAI’s Chat Completions API
-- Generate short natural-language rationales
-- Cache reasoning results in the database
-
-### 🧮 Testing
+## Pushing to a New GitHub Repository
 ```bash
-pytest -v
+# Initialize git
+git init
+git add .
+git commit -m "feat: initial commit - AI-powered transactions pipeline"
+
+# Create a new repo on GitHub (via UI), then:
+git branch -M main
+git remote add origin https://github.com/<your-username>/ai-fin-transactions-pipeline.git
+git push -u origin main
 ```
 
-### ☁️ Deployment (Example)
-Deploy easily to:
- - Azure Container Apps
- - AWS ECS / Fargate
- - Google Cloud Run
- - Render / Railway / Fly.io
+## Security Notes
+- Never commit real secrets. Use `.env` and a secret manager (GitHub Actions, Azure Key Vault).
+- Add IP allowlists and auth (e.g., API keys, OAuth) before production.
+- LLM analysis should not leak PII. Mask / tokenize sensitive fields.
 
-Build and push image:
-```bash
-docker build -t your-username/ai-fin-transactions-pipeline .
-docker push your-username/ai-fin-transactions-pipeline
-```
-### ✨ Author
-**Saketh Sai Nigam Kanduri**
-- 📧 kndrsakethms@gmail.com
-- 🔗 [LinkedIn](www.linkedin.com/in/kandurisakethsainigam)
-- 🎓 University College Dublin — M.Sc. Data & Computational Science
+## License
+MIT
