@@ -101,48 +101,30 @@ python -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 cp .env.example .env
-2️⃣ Run the API
+```
+### 2️⃣ Run the API
+```bash
 uvicorn app.main:app --reload
+```
 👉 Open http://127.0.0.1:8000/docs to explore the interactive Swagger UI.
+
 🐳 Quickstart (Docker)
+```bash
 cp .env.example .env
 docker compose up --build
+```
 API available at: http://localhost:8000/docs
 Database: localhost:5432 (user: postgres / pass: postgres)
-🧠 Example: Ingest Transactions
-curl -X POST http://127.0.0.1:8000/ingest \
--H "Content-Type: application/json" \
--d '{
-  "transactions": [{
-    "txn_id": "abc123",
-    "account_id": "ACC-1001",
-    "amount": 15000,
-    "currency": "EUR",
-    "merchant": "Contoso",
-    "category": "crypto",
-    "ts": "2025-10-14T10:00:00Z"
-  }]
-}'
-Example response
-[
-  {
-    "id": 1,
-    "txn_id": "abc123",
-    "account_id": "ACC-1001",
-    "amount": 15000.0,
-    "is_anomaly": true,
-    "anomaly_score": 4.1,
-    "anomaly_reason": "risk: high; reason: unusually large crypto transaction."
-  }
-]
-🔎 Core Endpoints
+
+### 🔎 Core Endpoints
 Method	Endpoint	Description
 POST	/ingest	Bulk ingest transactions
 GET	/transactions	List transactions (filter/pagination)
 GET	/anomalies	List high-risk anomalies
 GET	/insights/{transaction_id}	Fetch AI-generated reasoning
 POST	/recompute	Recalculate anomaly scores
-🧰 Environment Variables
+
+### 🧰 Environment Variables
 Variable	Description	Default
 APP_ENV	Environment (dev/prod)	dev
 DATABASE_URL	SQLAlchemy DB URI	postgresql://postgres:postgres@db:5432/transactions
@@ -151,14 +133,19 @@ ANOMALY_AMOUNT_THRESHOLD	Rule-based high amount	10000
 OPENAI_API_KEY	Your OpenAI key	empty
 OPENAI_MODEL	Model for reasoning	gpt-4o-mini
 ENABLE_LLM_ANALYSIS	Enable LLM risk reasoning	false
-💡 AI / LLM Integration
-If ENABLE_LLM_ANALYSIS=true and OPENAI_API_KEY is provided, the service will automatically:
-Analyze flagged anomalies using OpenAI’s Chat Completions API
-Generate short natural-language rationales
-Cache reasoning results in the database
-🧮 Testing
+
+### 💡 AI / LLM Integration
+If **ENABLE_LLM_ANALYSIS=true** and **OPENAI_API_KEY** is provided, the service will automatically:
+- Analyze flagged anomalies using OpenAI’s Chat Completions API
+- Generate short natural-language rationales
+- Cache reasoning results in the database
+
+### 🧮 Testing
+```bash
 pytest -v
-☁️ Deployment (Example)
+```
+
+### ☁️ Deployment (Example)
 Deploy easily to:
 Azure Container Apps
 AWS ECS / Fargate
@@ -167,8 +154,7 @@ Render / Railway / Fly.io
 Build and push image:
 docker build -t your-username/ai-fin-transactions-pipeline .
 docker push your-username/ai-fin-transactions-pipeline
-🧾 License
-Licensed under the MIT License.
+
 ✨ Author
 Saketh Sai Nigam Kanduri
 📧 kndrsakethms@gmail.com
