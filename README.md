@@ -46,6 +46,7 @@ The system is designed to handle **1M+ transactions per day** using asynchronous
 | LangChain Pipeline |
 +--------------------+
 ```
+---
 
 ## ⚙️ Tech Stack
 
@@ -62,32 +63,33 @@ The system is designed to handle **1M+ transactions per day** using asynchronous
 
 ## 📂 Project Structure
 
+```text
 ai-fin-transactions-pipeline/
 │
 ├── app/
-│ ├── main.py # FastAPI entry point
-│ ├── config.py # Environment & settings
-│ ├── database.py # SQLAlchemy engine & session
-│ ├── models.py # ORM models
-│ ├── schemas.py # Pydantic models
-│ ├── routers/
-│ │ └── transactions.py # API routes
-│ └── services/
-│ ├── anomaly.py # z-score & rule-based detection
-│ └── insights.py # LLM reasoning (OpenAI)
+│   ├── main.py              # FastAPI entry point
+│   ├── config.py            # Environment & settings
+│   ├── database.py          # SQLAlchemy engine & session
+│   ├── models.py            # ORM models
+│   ├── schemas.py           # Pydantic models
+│   ├── routers/
+│   │   └── transactions.py  # API routes
+│   └── services/
+│       ├── anomaly.py       # z-score & rule-based detection
+│       └── insights.py      # LLM reasoning (OpenAI)
 │
 ├── scripts/
-│ └── load_sample.py # Generate & ingest test data
+│   └── load_sample.py       # Generate & ingest test data
 │
 ├── tests/
-│ └── test_api.py # Basic API test
+│   └── test_api.py          # Basic API test
 │
 ├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt
 ├── .env.example
 └── README.md
-
+```
 ---
 
 ## 🧪 Quickstart (Local Setup)
