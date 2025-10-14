@@ -32,20 +32,20 @@ The system is designed to handle **1M+ transactions per day** using asynchronous
 
 ## 🏗️ Architecture
 
-+-------------+ +--------------------+ +---------------------+
-| Client / UI | ---> | FastAPI Service | ---> | PostgreSQL Database |
-+-------------+ | • /ingest | | • transactions |
-| • /anomalies | +---------------------+
+```text
++-------------+     +--------------------+     +---------------------+
+| Client / UI | ---> | FastAPI Service   | ---> | PostgreSQL Database |
++-------------+       | • /ingest         |       | • transactions      |
+| • /anomalies |      +-------------------+       +---------------------+
 | • /insights (LLM) |
 +--------------------+
-|
-v
+          |
+          v
 +--------------------+
-| OpenAI (LLM) |
+| OpenAI (LLM)       |
 | LangChain Pipeline |
 +--------------------+
-
----
+```
 
 ## ⚙️ Tech Stack
 
