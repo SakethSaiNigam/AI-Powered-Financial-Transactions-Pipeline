@@ -165,5 +165,5 @@ docker push your-username/ai-fin-transactions-pipeline
 ### ✨ Author
 **Saketh Sai Nigam Kanduri**
 - 📧 kndrsakethms@gmail.com
-- 🔗 LinkedIn
+- 🔗 [LinkedIn](www.linkedin.com/in/kandurisakethsainigam)
 - 🎓 University College Dublin — M.Sc. Data & Computational Science
