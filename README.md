@@ -120,11 +120,11 @@ Database: localhost:5432 (user: postgres / pass: postgres)
 
 ### 🔎 Core Endpoints
 Method	Endpoint	Description
-POST	/ingest	Bulk ingest transactions
-GET	/transactions	List transactions (filter/pagination)
-GET	/anomalies	List high-risk anomalies
-GET	/insights/{transaction_id}	Fetch AI-generated reasoning
-POST	/recompute	Recalculate anomaly scores
+- POST	/ingest	Bulk ingest transactions
+- GET	/transactions	List transactions (filter/pagination)
+- GET	/anomalies	List high-risk anomalies
+- GET	/insights/{transaction_id}	Fetch AI-generated reasoning
+- POST	/recompute	Recalculate anomaly scores
 
 ### 🧰 Environment Variables
 Variable	Description	Default
@@ -149,15 +149,17 @@ pytest -v
 
 ### ☁️ Deployment (Example)
 Deploy easily to:
-Azure Container Apps
-AWS ECS / Fargate
-Google Cloud Run
-Render / Railway / Fly.io
+ - Azure Container Apps
+ - AWS ECS / Fargate
+ - Google Cloud Run
+ - Render / Railway / Fly.io
+
 Build and push image:
+```bash
 docker build -t your-username/ai-fin-transactions-pipeline .
 docker push your-username/ai-fin-transactions-pipeline
-
-✨ Author
+```
+### ✨ Author
 Saketh Sai Nigam Kanduri
 📧 kndrsakethms@gmail.com
 🔗 LinkedIn
