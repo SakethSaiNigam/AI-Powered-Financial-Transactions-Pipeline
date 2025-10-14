@@ -102,6 +102,8 @@ source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 cp .env.example .env
 ```
+---
+
 ### 2️⃣ Run the API
 ```bash
 uvicorn app.main:app --reload
