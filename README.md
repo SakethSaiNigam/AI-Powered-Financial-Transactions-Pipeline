@@ -6,7 +6,6 @@
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115.0-009688?logo=fastapi)
 ![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
 ![Docker](https://img.shields.io/badge/Docker-ready-0db7ed?logo=docker)
-![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
 
