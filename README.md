@@ -212,11 +212,6 @@ docker push your-username/ai-fin-transactions-pipeline
 
 ---
 
-## 🧾 License
-Licensed under the MIT License.
-
----
-
 ## ✨ Author
 **Saketh Sai Nigam Kanduri**  
 📧 kndrsakethms@gmail.com  
